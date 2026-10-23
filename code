@@ -1,0 +1,33 @@
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] a = new int[n];
+        for (int i = 0; i < n; i++) a[i] = sc.nextInt();
+
+        int[] sum = new int[n + 1];
+        for (int i = 0; i < n; i++) sum[i + 1] = sum[i] + a[i];
+
+        int[][] dp = new int[n][n];
+
+        for (int len = 2; len <= n; len++) {
+            for (int i = 0; i + len - 1 < n; i++) {
+                int j = i + len - 1;
+                for (int k = i; k < j; k++) {
+                    int left = sum[k + 1] - sum[i];
+                    int right = sum[j + 1] - sum[k + 1];
+                    int cur;
+                    if (left < right) cur = left + dp[i][k];
+                    else if (left > right) cur = right + dp[k + 1][j];
+                    else cur = left + Math.max(dp[i][k], dp[k + 1][j]);
+                    dp[i][j] = Math.max(dp[i][j], cur);
+                }
+            }
+        }
+
+        System.out.println(dp[0][n - 1]);
+    }
+}
